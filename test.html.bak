@@ -1,0 +1,138 @@
+<html>
+<head>
+<title>Myysterium</title>
+<style>
+.vision {
+  width: 256;
+  height: auto;
+  margin: 5px;
+  border: 10px solid #d0d9e4;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-out;
+  vertical-align:top;
+}
+.vision:hover {
+  width: 512;
+  cursor: pointer;
+  transition-timing-function: ease-in;
+}
+.selected {
+  border: 10px solid #338899;
+}
+
+#visions {
+	width: 1400;
+}
+
+#backgroundImage {
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: auto;
+	opacity: 0.4;
+}
+
+.button {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #d0d9e4;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 28px;
+  padding: 20px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.button:hover span {
+  padding-right: 25px;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+#overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 2;
+  cursor: pointer;
+}
+
+</style>
+</head>
+<script>
+var deckSize=34;
+var cards = Array.from(Array(deckSize), (_, i) => i);
+
+function drawCard(slot) {
+	slot.src="visions/vision ("+(cards.pop() + 1)+").jpg";
+	slot.classList.remove("selected");
+	deckSize--;
+}
+
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
+
+function loadStuff(){
+	const visionsDiv = document.getElementById("visions");
+	shuffleArray(cards);
+	for (i=0; i<7; i++){
+		const slot = document.createElement("img");
+		slot.classList.add('vision');
+		slot.onclick = function toggle(){ slot.classList.toggle("selected"); };
+		visions.appendChild(slot);
+		drawCard(slot);
+	}
+}
+
+function giveVisions(){
+	document.getElementById("overlay").style.display = "block";
+	document.querySelectorAll(".selected").forEach(drawCard);
+	document.getElementById("overlay").style.display = "none";
+}
+
+</script>
+<body onLoad="loadStuff()">
+<img id="backgroundImage" src="background.jpg" />
+
+<div id="overlay" onclick="off()"></div>
+
+<button id="giveVisionsBtn" class="button" onclick="giveVisions()"><span>Give Visions </span></button>
+<div id="visions">
+</div>
+</body>
+</html>

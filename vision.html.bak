@@ -1,0 +1,98 @@
+<html>
+<head>
+<title>Myysterium</title>
+<style>
+.vision {
+  width: 256;
+  height: auto;
+  margin: 5px;
+  border: 10px solid #d0d9e4;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-out;
+  vertical-align:top;
+}
+.vision:hover {
+  width: 512;
+  cursor: pointer;
+  transition-timing-function: ease-in;
+}
+.selected {
+  border: 10px solid #338899;
+}
+
+#visions {
+	width: 1400;
+}
+#backgroundImage {
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: auto;
+	opacity: 0.4;
+}
+
+.button {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #d0d9e4;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 28px;
+  padding: 20px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.button:hover span {
+  padding-right: 25px;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+
+</style>
+</head>
+<script>
+
+function loadStuff(){
+	const visionsDiv = document.getElementById("visions");
+	let imgs = window.location.search.split('=')[1].split(',');
+	for (img of imgs){
+		const slot = document.createElement("img");
+		slot.classList.add('vision');
+		slot.src=img;
+		visions.appendChild(slot);
+	}
+}
+
+</script>
+<body onLoad="loadStuff()">
+<img id="backgroundImage" src="background.jpg" />
+<button class="button" onclick="window.close()"><span>Done </span></button>
+<div id="visions">
+</div>
+</body>
+</html>
