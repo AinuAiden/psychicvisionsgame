@@ -1,0 +1,175 @@
+<html>
+<head>
+<title>Hand</title>
+<style>
+.vision {
+  width: 256;
+  height: auto;
+  margin: 5px;
+  border: 10px solid #d0d9e4;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-out;
+  vertical-align:top;
+}
+.vision:hover {
+  width: 512;
+  cursor: pointer;
+  transition-timing-function: ease-in;
+}
+.selected {
+  border: 10px solid #338899;
+}
+
+#visions {
+	width: 1400;
+}
+
+#backgroundImage {
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: auto;
+	opacity: 0.4;
+}
+
+.button {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #d0d9e4;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 28px;
+  padding: 20px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.button:hover span {
+  padding-right: 25px;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+</style>
+</head>
+<script>
+var selectedCount=0;
+var deck = Array();
+var discardPile = Array.from(Array(34), (_, i) => "visions/vision ("+(i+1)+").jpg");
+
+function drawCard(slot) {
+	if(deck.length<1) shuffleDeck();
+	slot.src=deck.pop();
+	toggleOff(slot);
+	updateDiscardButton();
+}
+
+function discardCard(slot){
+	discardPile.push(slot.src);
+	drawCard(slot);
+}
+
+function shuffleDeck(){
+	deck.push(...discardPile);
+	discardPile.length=0;
+	shuffleArray(deck);
+	if(deck.length<1) deck.push("empty_card.png");
+}
+
+function updateGiveButton(){
+	const giveVisionsBtn = document.getElementById("giveVisionsBtn");
+	const selectedCount=document.querySelectorAll(".selected").length;
+	giveVisionsBtn.disabled = selectedCount < 1;
+	giveVisionsBtn.innerHTML="<span>Send "+selectedCount+" Visions </span>";
+}
+function updateDiscardButton(){
+	const discardVisionsBtn = document.getElementById("discardVisionsBtn");
+	discardVisionsBtn.innerHTML="<span>Discard Hand</span>";
+	discardVisionsBtn.title=deck.length+" cards remaining in the deck. "+discardPile.length+ " in discard pile.";
+}
+
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
+
+function loadStuff(){
+	const visionsDiv = document.getElementById("visions");
+	for (i=0; i<7; i++){
+		const slot = document.createElement("img");
+		slot.classList.add('vision');
+		slot.onclick = function() {toggleOn(slot);};
+		visions.appendChild(slot);
+		drawCard(slot);
+	}
+	updateGiveButton();
+}
+
+function toggleOn(slot){ 
+	if(slot.classList.contains("selected")) return;
+	slot.classList.add("selected"); 
+	updateGiveButton();
+	slot.onclick=function() {toggleOff(slot);};
+};
+
+function toggleOff(slot){ 
+	if(!slot.classList.contains("selected")) return;
+	slot.classList.remove("selected"); 
+	updateGiveButton();
+	slot.onclick=function() {toggleOn(slot);};
+};
+
+function giveVisions(){
+	const selected=document.querySelectorAll(".selected");
+	var imgs =  Array();
+	selected.forEach((slot) => { imgs.push(slot.src); })
+	selected.forEach(drawCard);
+	window.open("vision.html?cards="+imgs);
+}
+
+function discardVisions(){
+	document.querySelectorAll(".selected").forEach(toggleOff);
+	document.querySelectorAll(".vision").forEach(discardCard);
+}
+
+</script>
+<body onLoad="loadStuff()">
+<img id="backgroundImage" src="background.jpg" />
+<button id="giveVisionsBtn" class="button" onclick="giveVisions()"></button>
+<button id="discardVisionsBtn" class="button" onclick="discardVisions()"></button>
+
+<div id="visions">
+</div>
+</body>
+</html>
