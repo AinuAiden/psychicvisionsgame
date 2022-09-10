@@ -82,7 +82,7 @@
 <script>
 var selectedCount=0;
 var deck = Array();
-var discardPile = Array.from(Array(34), (_, i) => "visions/vision ("+(i+1)+").jpg");
+var discardPile = Array.from(Array(34), (_, i) => "visions/vision_"+(i+1)+".jpg");
 
 function drawCard(slot) {
 	if(deck.length<1) shuffleDeck();
